@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd 
 import pydicom
 
+from utils import window_image
+
 
 def window_processing(dcm):
     '''
