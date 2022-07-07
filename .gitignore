@@ -139,10 +139,11 @@ cython_debug/
 
 #input data and model
 input/
-models/
+models/*
 
 #data files
 *.csv
 *.h5
 *.pkl
 *.pth
+*.pt
