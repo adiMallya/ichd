@@ -1,34 +1,91 @@
-from flask import Flask, request, render_template, jsonify
+from flask import (
+    Flask,
+    request,
+    render_template,
+    make_response,
+    jsonify,
+    redirect,
+    flash,
+    url_for,
+)
+
 import subprocess
 
 from flask_cors import CORS
-import io
-import cv2
+import os
+import errno
+
+from werkzeug.utils import secure_filename
+
+
+UPLOAD_FOLDER = "/workspace/ichd/src/uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg"}
 
 app = Flask(__name__)
+app.secret_key = "1234ADY"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.add_url_rule("/uploads/<name>", endpoint="download_file", build_only=True)
 CORS(app)
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/predict_api", methods=["GET", "POST"])
 def predict_classes():
     if request.method == "GET":
-        render_template("home.html", value="Image")
-    elif request.method == "POST":
+        return render_template("home.html", value="Upload")
+    if request.method == "POST":
         if "file" not in request.files:
-            return "Image not uploaded!"
-        file = request.files["file"].read()
-        try:
-            # img = Image.open(io.BytesIO(file))
-            preds, pred_proba = subprocess.check_output(
-                [f"python3 src/predict.py {file}"], shell=True
-            ).decode("utf-8")
-            pred_proba = pred_proba.split("-")
-            return jsonify(predictions=preds, pred_prob=pred_proba)
-
-        except IOError:
-            return jsonify(
-                predictions="Not an Image, Upload a proper image file", preds_prob=""
+            flash("No file part")
+            return redirect(url_for("predict_classes"))
+        file = request.files["file"]
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == "":
+            response = make_response(
+                jsonify(predictions="No file selected", pred_probas=""),
+                400,
             )
+            response.headers["Content-Type"] = "application/json"
+            return response
+        try:
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                out = subprocess.check_output(
+                    [
+                        "python3",
+                        "/workspace/ichd/src/predict.py",
+                        f"/workspace/ichd/src/uploads/{filename}",
+                    ],
+                    shell=False,
+                ).decode("utf-8")
+                out = out.split("@")
+                preds = out[0]
+                probas = out[1]
+                probas = probas.strip("\n").split("-")
+
+                response = make_response(
+                    jsonify(predictions=preds, pred_probas=probas),
+                    200,
+                )
+                response.headers["Content-Type"] = "application/json"
+                return response
+            else:
+                response = make_response(
+                    jsonify(
+                        predictions="File format expected in PNG or JPG",
+                        pred_probas="",
+                    ),
+                    400,
+                )
+                response.headers["Content-Type"] = "application/json"
+                return response
+        except IOError as e:
+            if e.errno == errno.EPIPE:
+                pass
 
 
 if __name__ == "__main__":
