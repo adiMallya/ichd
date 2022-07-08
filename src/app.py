@@ -22,7 +22,6 @@ UPLOAD_FOLDER = "/workspace/ichd/src/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg"}
 
 app = Flask(__name__)
-app.secret_key = "1234ADY"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.add_url_rule("/uploads/<name>", endpoint="download_file", build_only=True)
 CORS(app)
