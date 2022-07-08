@@ -13,7 +13,7 @@ from torchvision.models.resnet import ResNet, Bottleneck
 def _resnext(block, layers, pretrained, **kwargs):
     model = ResNet(block, layers, **kwargs)
     # state_dict = load_state_dict_from_url(model_urls[arch], progress=progress)
-    model.load_state_dict(torch.load('src/models/ig_resnext101_32x8.pth'))
+    model.load_state_dict(torch.load('/workspace/ichd/src/models/ig_resnext101_32x8.pth'))
     return model
 
 
