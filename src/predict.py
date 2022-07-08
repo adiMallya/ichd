@@ -1,5 +1,4 @@
 import cv2
-import time
 import numpy as np
 import warnings
 
@@ -32,9 +31,9 @@ def get_tensor(img):
 
 
 def predict(img):
-    start = time.time()
-    model = get_model("src/models/png_model_e10_final.pt", n_classes=6)
-    print("--- %s seconds ---" % (time.time() - start))
+    # start = time.time()
+    model = get_model("/workspace/ichd/src/models/png_model_e10_final.pt", n_classes=6)
+    # print("--- %s seconds ---" % (time.time() - start))
     label_list = [
         "epidural",
         "intraparenchymal",
@@ -75,7 +74,7 @@ def predict(img):
     cd = [": ".join(map(str, tup)) for tup in _l]
     cd = "-".join(cd)
 
-    return str(label), cd
+    return str(label) + '@', cd
 
 
 if __name__ == "__main__":
@@ -85,7 +84,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     img_path = args.img_path
 
-    labels, probas = predict(img_path)
+    out = predict(img_path)
 
-    print(labels)
-    print(probas)
+    for i in out:
+        print(str(i))
