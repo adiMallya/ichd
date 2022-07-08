@@ -140,6 +140,7 @@ cython_debug/
 #input data and model
 input/
 models/*
+uploads/
 
 #data files
 *.csv
