@@ -1,4 +1,6 @@
 import cv2
+from io import BytesIO
+import base64
 import numpy as np
 import warnings
 
@@ -7,10 +9,32 @@ import torch.nn as nn
 from albumentations import Compose, CenterCrop
 from albumentations.pytorch import ToTensorV2
 
+from torchcam.methods import SmoothGradCAMpp
+from torchcam.utils import overlay_mask
+from torchvision.transforms.functional import to_pil_image
+
 from train.models import resnext101_32x8d_wsl
 import argparse
 
 warnings.filterwarnings("ignore")
+
+
+def get_cam(model, img):
+    target_layers = [model.module.layer4[-1]]
+    cam_extractor = SmoothGradCAMpp(model, target_layers)
+    out = model(img)
+    activ_map = cam_extractor(out.squeeze(0).argmax().item(), out)
+
+    for name, cam in zip(cam_extractor.target_names, activ_map):
+        vis = overlay_mask(to_pil_image(img.squeeze(0)), to_pil_image(cam, mode='F'), alpha=0.5)
+    return vis
+
+
+def get_b64(img):
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue())
+    return "data:image/png;base64," + img_str.decode()
 
 
 def get_model(path, n_classes):
@@ -43,9 +67,9 @@ def predict(img):
         "any",
     ]
 
-    input_tensor = get_tensor(img)
+    input_tensor = get_tensor(img).float()
 
-    out = model(input_tensor.float())
+    out = model(input_tensor)
     out = torch.sigmoid(out)
     out_trgt = torch.round(out)
 
@@ -74,7 +98,11 @@ def predict(img):
     cd = [": ".join(map(str, tup)) for tup in _l]
     cd = "-".join(cd)
 
-    return str(label) + '@', cd
+    # GRAD-Cam visualization
+    grad_vis = get_cam(model, input_tensor)
+    out_img = get_b64(grad_vis)
+
+    return str(label) + '@', str(cd) + '@', out_img
 
 
 if __name__ == "__main__":
