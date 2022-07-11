@@ -56,7 +56,7 @@ def get_tensor(img):
 
 def predict(img):
     # start = time.time()
-    model = get_model("/workspace/ichd/src/models/png_model_e10_final.pt", n_classes=6)
+    model = get_model("/workspace/ichd/src/models/yourmodel.pt", n_classes=6)
     # print("--- %s seconds ---" % (time.time() - start))
     label_list = [
         "epidural",
