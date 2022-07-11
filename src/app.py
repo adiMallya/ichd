@@ -11,7 +11,7 @@ from flask import (
 
 import subprocess
 
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import os
 import errno
 
@@ -32,6 +32,7 @@ def allowed_file(filename):
 
 
 @app.route("/predict_api", methods=["GET", "POST"])
+@cross_origin()
 def predict_classes():
     if request.method == "GET":
         return render_template("home.html", value="Upload")
@@ -77,7 +78,7 @@ def predict_classes():
                     jsonify(
                         predictions="File format expected in PNG or JPG",
                         pred_probas="",
-                        image=""
+                        image="",
                     ),
                     400,
                 )
