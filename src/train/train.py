@@ -153,19 +153,19 @@ for epoch in range(n_epochs):
     epoch_loss = tr_loss / len(data_loader_train)
     print('Training Loss: {:.4f}'.format(epoch_loss))
     print('-----------------------')
-    #Tensorboard code for visualisations
+    # Tensorboard code for visualisations
     tb.add_scalar("Training Loss", tr_loss, epoch)
     # tb.add_scalar("Training Correct preds", tr_correct, epoch)
     tb.add_scalar("Training Accuracy", tr_correct / len(train_dataset), epoch)
     print('Finished Training!')
 
-    #Put model in evalauation mode
+    # Put model in evalauation mode
     model.eval()
     tr_loss = 0
     tr_correct = 0
 
-   # auc_preds = []
-   # auc_truths = []
+    # auc_preds = []
+    # auc_truths = []
 
 
     print('Validation starts...')
