@@ -38,9 +38,7 @@ def main():
     # Wide mode
     st.set_page_config(layout="wide")
 
-    # Designing the interface
     st.title("Intracraneal Hemorrhage(ICH) Diagnosis")
-    # For newline
     st.write("\n")
     # Set the columns
     cols = st.columns((1, 1))
@@ -55,7 +53,6 @@ def main():
     )
     if uploaded_file is not None:
         img = Image.open(BytesIO(uploaded_file.read()), mode="r").convert("RGB")
-        # cols[0].image(img, use_column_width=True)
         cols[0].image(img, width=300)
     if st.sidebar.button("Predict"):
 
@@ -105,9 +102,13 @@ def main():
                 visualisation = get_cam(model, img_tensor.unsqueeze(0))
                 # cols[-1].image(visualisation, use_column_width=True)
                 cols[-1].image(visualisation, width=300)
-                # df = pd.DataFrame(data=np.zeros((6,2)),
-                # columns=['Subtype','Predicted Probability'],
-                # index=np.linspace(1, 6, 6, dtype=int))
+
+                if len(label) == 0:
+                    final = "ICH negative"
+                else:
+                    final = "ICH positive"
+                st.subheader(f'Diagnosis made : {final}')
+
                 df = pd.DataFrame(arg_s, index=[0]).astype(str) + '%'
                 st.subheader("Confidence Level")
                 # CSS to inject contained in a string
@@ -121,22 +122,6 @@ def main():
                 # Inject CSS with Markdown
                 st.markdown(hide_dataframe_row_index, unsafe_allow_html=True)
                 st.dataframe(df)
-
-
-                if len(label) == 0:
-                    final = "ICH negative"
-                else:
-                    final = "ICH positive"
-                # print()
-                # new = pd.DataFrame(data=probas,columns=("epidural",
-                #            "intraparenchymal",
-                #            "intraventricular",
-                #            "subarachnoid",
-                #            "subdural",
-                #            "any",
-                #        ))
-                # st.table(data=arg_s)
-                st.subheader("Diagnosis made :", final)
 
 
 if __name__ == "__main__":
