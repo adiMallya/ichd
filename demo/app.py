@@ -77,7 +77,7 @@ def main():
                     "Any",
                 ]
 
-                model = get_model("/workspace/ichd/src/models/yourmodel.pt", n_classes=6)
+                model = get_model("models/png_model_e10_final.pt", n_classes=6)
                 # Forward the image to the model
                 out = model(img_tensor.unsqueeze(0))
 
