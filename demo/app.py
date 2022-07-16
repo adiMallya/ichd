@@ -39,14 +39,14 @@ def main():
     st.set_page_config(layout="wide")
 
     # Designing the interface
-    st.title("ICH Visualiser")
+    st.title("Intracraneal Hemorrhage(ICH) Diagnosis")
     # For newline
     st.write("\n")
     # Set the columns
     cols = st.columns((1, 1))
-    cols[0].header("Input image")
-    cols[-1].header("GRADCAM Visualisation")
-    st.sidebar.title("Input selection")
+    cols[0].header("CT Slice")
+    cols[-1].header("Model Observation")
+    st.sidebar.title("Input Selection")
     # Disabling warning
     st.set_option("deprecation.showfileUploaderEncoding", False)
     # Choose your own image
@@ -95,11 +95,8 @@ def main():
                 # print(proba_ord)
 
                 label = []
-                if len(out_np):
-                    for i in preds:
-                        label.append(label_list[i])
-                else:
-                    label.append("ICH Not Present")
+                for i in preds:
+                    label.append(label_list[i])
 
                 arg_s = {}
                 for i in proba_ord:
@@ -111,13 +108,25 @@ def main():
                 # df = pd.DataFrame(data=np.zeros((6,2)),
                 # columns=['Subtype','Predicted Probability'],
                 # index=np.linspace(1, 6, 6, dtype=int))
-                df = pd.DataFrame(arg_s, index=[0])
-                st.write("Probability Distibution(In Percentage)")
-                st.table(data=df)
+                df = pd.DataFrame(arg_s, index=[0]).astype(str) + '%'
+                st.subheader("Confidence Level")
+                # CSS to inject contained in a string
+                hide_dataframe_row_index = """
+                            <style>
+                            .row_heading.level0 {display:none}
+                            .blank {display:none}
+                            </style>
+                            """
+
+                # Inject CSS with Markdown
+                st.markdown(hide_dataframe_row_index, unsafe_allow_html=True)
+                st.dataframe(df)
+
+
                 if len(label) == 0:
-                    final = "ICH Not Present"
+                    final = "ICH negative"
                 else:
-                    final = label[0]
+                    final = "ICH positive"
                 # print()
                 # new = pd.DataFrame(data=probas,columns=("epidural",
                 #            "intraparenchymal",
@@ -127,7 +136,7 @@ def main():
                 #            "any",
                 #        ))
                 # st.table(data=arg_s)
-                st.write("Conclusion:", final)
+                st.subheader("Diagnosis made :", final)
 
 
 if __name__ == "__main__":
