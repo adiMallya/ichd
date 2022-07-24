@@ -1,19 +1,19 @@
 import torch
-# from torch.hub import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url
 from torchvision.models.resnet import ResNet, Bottleneck
 
-# model_urls = {
-#     "resnext101_32x8d": "https://download.pytorch.org/models/ig_resnext101_32x8-c38310e5.pth",
-#     "resnext101_32x16d": "https://download.pytorch.org/models/ig_resnext101_32x16-c6f796b0.pth",
-#     "resnext101_32x32d": "https://download.pytorch.org/models/ig_resnext101_32x32-e4b90b00.pth",
-#     "resnext101_32x48d": "https://download.pytorch.org/models/ig_resnext101_32x48-3e41cc8a.pth",
-# }
+model_urls = {
+    "resnext101_32x8d": "https://download.pytorch.org/models/ig_resnext101_32x8-c38310e5.pth",
+    "resnext101_32x16d": "https://download.pytorch.org/models/ig_resnext101_32x16-c6f796b0.pth",
+    "resnext101_32x32d": "https://download.pytorch.org/models/ig_resnext101_32x32-e4b90b00.pth",
+    "resnext101_32x48d": "https://download.pytorch.org/models/ig_resnext101_32x48-3e41cc8a.pth",
+}
 
 
 def _resnext(block, layers, pretrained, **kwargs):
     model = ResNet(block, layers, **kwargs)
-    # state_dict = load_state_dict_from_url(model_urls[arch], progress=progress)
-    model.load_state_dict(torch.load('/workspace/ichd/src/models/ig_resnext101_32x8.pth'))
+    state_dict = load_state_dict_from_url(model_urls[arch], progress=progress)
+    model.load_state_dict(state_dict)
     return model
 
 
