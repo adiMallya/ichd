@@ -1,1 +1,1 @@
-## Identifying ICH : A deep learning approach
+## Detection and classification Of ICH
