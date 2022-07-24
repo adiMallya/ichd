@@ -65,10 +65,9 @@ def predict_classes():
                 out = out.split("@")
                 preds = out[0]
                 probas = out[1].strip("\n").split("-")
-                grad_cam = out[2].strip("\n")
 
                 response = make_response(
-                    jsonify(predictions=preds, pred_probas=probas, image=grad_cam),
+                    jsonify(predictions=preds, pred_probas=probas),
                     200,
                 )
                 response.headers["Content-Type"] = "application/json"
@@ -78,7 +77,6 @@ def predict_classes():
                     jsonify(
                         predictions="File format expected in PNG or JPG",
                         pred_probas="",
-                        image="",
                     ),
                     400,
                 )
