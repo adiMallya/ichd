@@ -18,7 +18,7 @@ import errno
 from werkzeug.utils import secure_filename
 
 
-UPLOAD_FOLDER = "/workspace/ichd/src/uploads"
+UPLOAD_FOLDER = "/workspace/ichd/api/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg"}
 
 app = Flask(__name__)
@@ -57,8 +57,8 @@ def predict_classes():
                 out = subprocess.check_output(
                     [
                         "python3",
-                        "/workspace/ichd/src/predict.py",
-                        f"/workspace/ichd/src/uploads/{filename}",
+                        "/workspace/ichd/api/predict.py",
+                        f"/workspace/ichd/api/uploads/{filename}",
                     ],
                     shell=False,
                 ).decode("utf-8")
