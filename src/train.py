@@ -22,8 +22,6 @@ from models import resnext101_32x8d_wsl
 dir_csv = '/workspace/ichd/input'
 # test_images_dir = '/workspace/ichd/input/stage_1_test_png_224x/'
 train_images_dir = '/workspace/ichd/input/stage_1_train_png_224x/'
-# train_metadata_csv = '/workspace/ichd/input/train_metadata_noidx.csv'
-# test_metadata_csv = '/workspace/ichd/input/test_metadata_noidx.csv'
 tb  = SummaryWriter('runs/ich_detection_experiment_1')
 
 
