@@ -31,7 +31,7 @@ def get_tensor(img):
 
 
 def predict(img):
-    model = get_model("src/models/yourmodel", n_classes=6)
+    model = get_model("src/models/yourmodel.pt", n_classes=6)
 
     label_list = [
         "epidural",
