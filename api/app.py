@@ -45,7 +45,7 @@ def predict_classes():
         # empty file without a filename.
         if file.filename == "":
             response = make_response(
-                jsonify(predictions="No file selected", pred_probas="", image=""),
+                jsonify(predictions="No file selected", pred_probas=""),
                 400,
             )
             response.headers["Content-Type"] = "application/json"
