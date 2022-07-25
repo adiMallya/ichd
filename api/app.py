@@ -18,7 +18,7 @@ import errno
 from werkzeug.utils import secure_filename
 
 
-UPLOAD_FOLDER = "/workspace/ichd/src/uploads"
+UPLOAD_FOLDER = "/workspace/ichd/api/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg"}
 
 app = Flask(__name__)
@@ -45,7 +45,7 @@ def predict_classes():
         # empty file without a filename.
         if file.filename == "":
             response = make_response(
-                jsonify(predictions="No file selected", pred_probas="", image=""),
+                jsonify(predictions="No file selected", pred_probas=""),
                 400,
             )
             response.headers["Content-Type"] = "application/json"
@@ -57,18 +57,17 @@ def predict_classes():
                 out = subprocess.check_output(
                     [
                         "python3",
-                        "/workspace/ichd/src/predict.py",
-                        f"/workspace/ichd/src/uploads/{filename}",
+                        "/workspace/ichd/api/predict.py",
+                        f"/workspace/ichd/api/uploads/{filename}",
                     ],
                     shell=False,
                 ).decode("utf-8")
                 out = out.split("@")
                 preds = out[0]
                 probas = out[1].strip("\n").split("-")
-                grad_cam = out[2].strip("\n")
 
                 response = make_response(
-                    jsonify(predictions=preds, pred_probas=probas, image=grad_cam),
+                    jsonify(predictions=preds, pred_probas=probas),
                     200,
                 )
                 response.headers["Content-Type"] = "application/json"
@@ -78,7 +77,6 @@ def predict_classes():
                     jsonify(
                         predictions="File format expected in PNG or JPG",
                         pred_probas="",
-                        image="",
                     ),
                     400,
                 )
