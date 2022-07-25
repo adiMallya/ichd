@@ -1,8 +1,0 @@
-#dependencies
-torch==1.9.0
-streamlit==1.10.0
-torchcam==0.3.1
-numpy==1.19.5
-torchvision==0.10.0
-pandas==1.2.5
-Pillow==9.2.0
