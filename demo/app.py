@@ -60,7 +60,7 @@ def main():
             st.sidebar.error("Please upload an image first")
 
         else:
-            with st.spinner("Analyzing..."):
+            with cols[-1].spinner("Analyzing..."):
 
                 # Preprocess image
                 tfms_img = Compose([CenterCrop(200), ToTensor()])
@@ -109,7 +109,7 @@ def main():
                     final = "ICH positive"
                 st.subheader(f'Diagnosis made : {final}')
 
-                df = pd.DataFrame(arg_s).astype(str) + '%'
+                df = pd.DataFrame(arg_s, index=[0]).astype(str) + '%'
                 st.subheader("Confidence Level")
                 # CSS to inject contained in a string
                 hide_dataframe_row_index = """
