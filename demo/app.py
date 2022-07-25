@@ -60,9 +60,9 @@ def main():
             st.sidebar.error("Please upload an image first")
 
         else:
-            progress = cols[-1].spinner("Analyzing...")
-            with progress:
-
+            with cols[-1]:
+                st.spinner("Analyzing...")
+            with st.spinner("Analyzing..."):
                 # Preprocess image
                 tfms_img = Compose([CenterCrop(200), ToTensor()])
                 img_tensor = tfms_img(img).float()
