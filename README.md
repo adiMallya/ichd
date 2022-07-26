@@ -23,14 +23,14 @@ Detection and Classification Of Intracraneal Haemorrhage<br>
 
 ## Demo
 <p align="center">
-  <img width=90% alt="demo" src="documentation/ich-app.gif">
+  <img alt="demo" src="documentation/ich-app.gif">
 </p>
 
 ## Overview
 
 The AI-based diagnostic tool designed and implemented, is based on the ResNeXt-101 model. This model is fine-tuned for diagnosing an intracranial hemorrhage. We have a single image classifier (size `200` images with brain window), that returns predictions as probability scores across each of the five subtype labels (epidermal, intraventricular, intraparenchymal, subdural, subarachnoid), plus an additional type `"any"` (that would be true if any of the subtype labels is true). 
 <p align="center">
-  <img width=50% alt="model-diagram" src="documentation/Proposed_Arch.png">
+  <img width=70% alt="model-diagram" src="documentation/Proposed_Arch.png">
 </p>
 
 ## Hardware
